@@ -10,9 +10,8 @@ const Common = require('../common');
 
 class Injector {
   init() {
-    if (Common.DEBUG_MODE) {
-      Injector.lock(window, 'console', window.console);
-    }
+    Injector.lock(window, 'console', window.console);
+
     this.initInjectBundle();
     this.initAngularInjection();
     webFrame.setZoomLevelLimits(1, 1);

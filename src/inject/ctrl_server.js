@@ -3,7 +3,7 @@
 
 class CtrlServer {
   init() {
-    this.WSURL = "ws://127.0.0.1:9000";
+    this.WSURL = "ws://127.0.0.1:9876";
 
     this.wechatircd_LocalID = null // 服务端通过WebSocket控制网页版发送消息时指定LocalID，区分网页版上发送的消息(需要投递到服务端)与服务端发送的消息(不需要投递)
     this.seenLocalID = new Set() // 记录服务端请求发送的消息的LocalID，避免服务端收到自己发送的消息
@@ -24,7 +24,7 @@ class CtrlServer {
     this.open(false);
     setInterval(() => {
       self.sync_contact.apply(self)
-    }, 3000);
+    }, 30000);
   }
   open(reconnect) {
     this.ws = new WebSocket(this.WSURL);
