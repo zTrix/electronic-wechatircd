@@ -2,7 +2,6 @@
 const { ipcRenderer, webFrame } = require('electron');
 const MenuHandler = require('../handlers/menu');
 const ShareMenu = require('./share_menu');
-const MentionMenu = require('./mention_menu');
 const BadgeCount = require('./badge_count');
 const CtrlServer = require('./ctrl_server');
 const Common = require('../common');
@@ -45,7 +44,6 @@ class Injector {
             ipcRenderer.send('user-logged', '');
           });
           $rootScope.shareMenu = ShareMenu.inject;
-          $rootScope.mentionMenu = MentionMenu.inject;
         }]);
 
         let ret = angularBootstrapReal.apply(angular, arguments);
@@ -92,7 +90,6 @@ class Injector {
         return setTimeout(initModules, 3000);
       }
 
-      MentionMenu.init();
       BadgeCount.init();
       this.ctrlServer.init();
     };
@@ -131,15 +128,6 @@ class Injector {
     if (!(value.AddMsgList instanceof Array)) return value;
     value.AddMsgList.forEach((msg) => {
       switch (msg.MsgType) {
-        case constants.MSGTYPE_EMOTICON:
-          Injector.lock(msg, 'MMDigest', '[Emoticon]');
-          Injector.lock(msg, 'MsgType', constants.MSGTYPE_EMOTICON);
-          if (msg.ImgHeight >= Common.EMOJI_MAXIUM_SIZE) {
-            Injector.lock(msg, 'MMImgStyle', { height: `${Common.EMOJI_MAXIUM_SIZE}px`, width: 'initial' });
-          } else if (msg.ImgWidth >= Common.EMOJI_MAXIUM_SIZE) {
-            Injector.lock(msg, 'MMImgStyle', { width: `${Common.EMOJI_MAXIUM_SIZE}px`, height: 'initial' });
-          }
-          break;
         case constants.MSGTYPE_RECALLED:
           Injector.lock(msg, 'MsgType', constants.MSGTYPE_SYS);
           Injector.lock(msg, 'MMActualContent', Common.MESSAGE_PREVENT_RECALL);
@@ -152,11 +140,8 @@ class Injector {
 
   checkTemplateContent(value) {
     const optionMenuReg = /optionMenu\(\);/;
-    const messageBoxKeydownReg = /editAreaKeydown\(\$event\)/;
     if (optionMenuReg.test(value)) {
       value = value.replace(optionMenuReg, 'optionMenu();shareMenu();');
-    } else if (messageBoxKeydownReg.test(value)) {
-      value = value.replace(messageBoxKeydownReg, 'editAreaKeydown($event);mentionMenu($event);');
     }
     return value;
   }

@@ -15,7 +15,7 @@ class WeChatWindow {
   constructor() {
     this.loginState = { NULL: -2, WAITING: -1, YES: 1, NO: 0 };
     this.loginState.current = this.loginState.NULL;
-    this.inervals = {};
+    this.intervals = {};
     this.createWindow();
   }
 
@@ -109,9 +109,9 @@ class WeChatWindow {
   }
 
   connect() {
-    Object.keys(this.inervals).forEach((key, index) => {
+    Object.keys(this.intervals).forEach((key, index) => {
       clearInterval(key);
-      delete this.inervals[key];
+      delete this.intervals[key];
     });
 
     this.loadURL(Common.WEB_WECHAT);
@@ -121,7 +121,7 @@ class WeChatWindow {
         console.log('Reconnect.');
       }
     }, 5000);
-    this.inervals[int] = true;
+    this.intervals[int] = true;
   }
 }
 
