@@ -228,7 +228,7 @@ class CtrlServer {
     try {
       var contacts = contactFactory.getAllContacts(),
         all = Object.assign({}, window._strangerContacts, contacts),
-        me = accountFactory.getUserName(), me_sent = false
+        me = accountFactory.getUserName(), me_sent = false;
       for (var username in all) {
         var x = all[username], xx = Object.assign({}, x), update = false, command
         if (! x) {
@@ -308,7 +308,7 @@ class CtrlServer {
               xx.DeliveredMemberCount = members.length
               xx.SentContactType = 'room';
             }
-          } else if (x.isContact()) {
+          } else if (x.isContact() || username == 'filehelper') {
             command = 'friend'
             xx.SentContactType = command
           } else {
@@ -336,10 +336,8 @@ class CtrlServer {
   }
   static chatFactoryCreateMessage (real, context) {
     return (e) => {
-      console.log("modifying msgid", e);
       let msg = real.apply(context, [e]);
       msg.ClientMsgId = msg.LocalID = msg.MsgId = window.ctrlServer.wechatircd_LocalID || (utilFactory.now() + Math.random().toFixed(3)).replace(".", "");
-      console.log("modified msgid", msg);
       return msg;
     }
   }
