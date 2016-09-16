@@ -1391,27 +1391,13 @@ class SpecialUser:
         old_nick = getattr(self, 'nick', None)
         base = irc_escape(self.name()) or 'Guest'
         suffix = ''
-        known_username = {}
-        if client.server.options.known_nick:
-            try:
-                known_username = json.load(open(client.server.options.known_nick))
-            except:
-                pass
-        known_nick = {}
-        for k in known_username:
-            known_nick[irc_lower(known_username[k])] = k
-
-        if self.username in known_username:
-            self.nick = irc_lower(known_username[self.username])
-        else:
-            while 1:
-                nick = base+suffix
-                if nick and (nick == old_nick or
-                             (irc_lower(nick) != irc_lower(client.nick) and
-                             not client.has_special_user(nick) and
-                             not irc_lower(nick) in known_nick)):
-                    break
-                suffix = str(int(suffix or 0)+1)
+        while 1:
+            nick = base+suffix
+            if nick and (nick == old_nick or
+                         irc_lower(nick) != irc_lower(client.nick) and
+                         not client.has_special_user(nick)):
+                break
+            suffix = str(int(suffix or 0)+1)
 
         if nick != old_nick:
             for channel in self.channels:
@@ -1579,7 +1565,6 @@ def main():
     ap.add_argument('--web-port', type=int, default=9000, help='HTTP/WebSocket listen port')
     ap.add_argument('--tls-cert', help='TLS certificate for HTTPS/WebSocket over TLS')
     ap.add_argument('--tls-key', help='TLS key for HTTPS/WebSocket over TLS')
-    ap.add_argument('--known-nick', help='predefined nicklist to avoid nickname conflict')
     options = ap.parse_args()
 
     if sys.platform == 'linux':
