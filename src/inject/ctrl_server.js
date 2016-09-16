@@ -67,8 +67,8 @@ class CtrlServer {
       data = JSON.parse(data.detail)
       switch (data.command) {
       case 'close':
-        this.ws.close()
-        this.ws.open(false)
+        this.close()
+        this.open(false)
         break
       case 'add_friend':
         $.ajax({
