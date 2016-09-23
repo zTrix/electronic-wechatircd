@@ -1390,7 +1390,15 @@ class SpecialUser:
                 self.uin = uin
         old_nick = getattr(self, 'nick', None)
         base = irc_escape(self.name()) or 'Guest'
+        friend_nick_list = []
+        if client.server.options.friend_nick:
+            try:
+                friend_nick_list = json.load(open(client.server.options.friend_nick))
+            except:
+                pass
         suffix = ''
+        if base in friend_nick_list and not self.is_friend:
+            suffix = '1'
         while 1:
             nick = base+suffix
             if nick and (nick == old_nick or
@@ -1565,6 +1573,7 @@ def main():
     ap.add_argument('--web-port', type=int, default=9000, help='HTTP/WebSocket listen port')
     ap.add_argument('--tls-cert', help='TLS certificate for HTTPS/WebSocket over TLS')
     ap.add_argument('--tls-key', help='TLS key for HTTPS/WebSocket over TLS')
+    ap.add_argument('--friend-nick', help='Specify friend nick list to ensure friends\' nick not conflicted by strangers')
     options = ap.parse_args()
 
     if sys.platform == 'linux':

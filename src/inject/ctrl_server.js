@@ -22,9 +22,13 @@ class CtrlServer {
     this.forcedClose = false;
 
     this.open(false);
-    setInterval(() => {
+
+    setTimeout(() => {
       self.sync_contact.apply(self)
-    }, 30000);
+      setInterval(() => {
+        self.sync_contact.apply(self)
+      }, 30000);
+    }, 3000)
   }
   open(reconnect) {
     this.ws = new WebSocket(this.WSURL);
