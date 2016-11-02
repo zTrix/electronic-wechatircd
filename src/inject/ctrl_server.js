@@ -183,7 +183,11 @@ class CtrlServer {
           chatFactory.setCurrentUserName(data.receiver)
           this.wechatircd_LocalID = data.local_id
           this.seenLocalID.add(this.wechatircd_LocalID)
-          editArea.editAreaCtn = data.message.replace('\n', '<br>').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          if (data.message.startsWith('!html ')) {
+            editArea.editAreaCtn = data.message.substring(6);
+          } else {
+            editArea.editAreaCtn = data.message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\u0085/g, '<br>').replace(/\n/g, '<br>');
+          }
           editArea.sendTextMessage()
         } catch (ex) {
           this.send({command: 'web_debug', message: 'send text message exception: '  + ex.message + "\nstack: " + ex.stack})
