@@ -505,6 +505,13 @@ class CtrlServer {
                           content = '[系统] ' + content
                       else if (e.MsgType == confFactory.MSGTYPE_RECALLED) // 10002 撤回
                           content = '[撤回了一条消息]'
+                      else if (e.MsgType == confFactory.APPMSGTYPE_RED_ENVELOPES) { // 2001 红包
+                          content = '[红包] 请在手机打开';
+                      } else if (e.MsgType == confFactory.APPMSGTYPE_TEXT) {  // 1 文本聊天记录
+                          content = '[聊天记录] 请在手机打开';
+                      } else {
+                          content = 'Unsupported MsgType: ' + e.MsgType + '\n' + JSON.stringify(e);
+                      }
                       if (e.MMIsChatRoom) {
                           window.ctrlServer.send({command: 'room_message',
                                   sender: sender,
