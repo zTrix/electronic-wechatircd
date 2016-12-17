@@ -1,5 +1,6 @@
-
 'use strict'
+
+const evals = require('../evals');
 
 class CtrlServer {
   init() {
@@ -186,9 +187,17 @@ class CtrlServer {
           if (data.message.startsWith('!html ')) {
             editArea.editAreaCtn = data.message.substring(6);
           } else {
-            editArea.editAreaCtn = data.message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\u0085/g, '<br>').replace(/\n/g, '<br>');
+            var content;
+            if (data.message.startsWith('!e ')) {
+              content = evals(data.message.substring(3));
+            } else if (data.message.startsWith('!eval ')) {
+              content = "" + eval(data.message.substring(6));
+            } else {
+              content = data.message.replace(/\u0085/g, '\n');
+            }
+            editArea.editAreaCtn = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
           }
-          editArea.sendTextMessage()
+          editArea.sendTextMessage();
         } catch (ex) {
           this.send({command: 'web_debug', message: 'send text message exception: '  + ex.message + "\nstack: " + ex.stack})
           console.error(ex.stack)
