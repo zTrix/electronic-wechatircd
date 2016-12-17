@@ -4,7 +4,7 @@ Documentation=https://github.com/zTrix/electronic-wechatircd
 After=network.target
 
 [Service]
-ExecStart=/opt/electronic-wechatircd/wechatircd.py --password your_password_here -v -d --web-port 9876
+ExecStart=/opt/electronic-wechatircd/wechatircd.py --password your_password_here -v --web-port 9876
 
 [Install]
 WantedBy=multi-user.target
