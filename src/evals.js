@@ -18,6 +18,13 @@ function evals(input) {
       '/' : '/',
     }
 
+    var lengthMap = {
+        'x': 2,
+        'X': 2,
+        'u': 4,
+        'U': 8,
+    };
+
     function isHexDigit(x) {
         return (x >= '0' && x <= '9')
             || (x >= 'A' && x <= 'F')
@@ -43,23 +50,12 @@ function evals(input) {
                 result += mode + chr;
                 mode = '';
             }
-        } else if (mode === 'x' || mode === 'X') {
+        } else if (mode === 'x' || mode === 'X' || mode == 'u' || mode == 'U') {
             arr.push(chr);
-            if (arr.length == 2) {
-                if (isHexDigit(arr[0]) && isHexDigit(arr[1])) {
-                    result += String.fromCharCode(parseInt(arr.join(''), 16));
-                } else {
-                    console.log('mode', mode);
-                    result += '\\' + mode + arr.join('');
-                }
-                mode = '';
-                arr = [];
-            }
-        } else if (mode === 'u' || mode === 'U') {
-            arr.push(chr);
-            if (arr.length == 4) {
-                if (isHexDigit(arr[0]) && isHexDigit(arr[1]) && isHexDigit(arr[2]) && isHexDigit(arr[3])) {
-                    result += String.fromCharCode(parseInt(arr.join(''), 16));
+            var length = lengthMap[mode];
+            if (arr.length == length) {
+                if (arr.every(isHexDigit)) {
+                    result += String.fromCodePoint(parseInt(arr.join(''), 16));
                 } else {
                     result += '\\' + mode + arr.join('');
                 }
