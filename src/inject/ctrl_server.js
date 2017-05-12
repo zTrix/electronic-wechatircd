@@ -149,7 +149,7 @@ class CtrlServer {
             console.log('+ API_webwxuploadmedia done')
             var ext = data.filename.match(/\.(\w+)$/)
             ext = ext ? ext[1] : ''
-            var old = chatFactory.getCurrentUserName()
+            let old = chatFactory.getCurrentUserName()
             try {
               chatFactory.setCurrentUserName(data.receiver)
               var m = chatFactory.createMessage({
@@ -162,7 +162,9 @@ class CtrlServer {
                 MMFileStatus: confFactory.MM_SEND_FILE_STATUS_SUCCESS,
               })
             } finally {
-              chatFactory.setCurrentUserName(old)
+              if (old) {
+                chatFactory.setCurrentUserName(old)
+              }
             }
             m.MediaId = res.MediaId
             chatFactory.appendMessage(m)
@@ -178,7 +180,7 @@ class CtrlServer {
         })
         break
       case 'send_text_message':
-        var old = chatFactory.getCurrentUserName()
+        let old = chatFactory.getCurrentUserName()
         try {
           console.log("send_text_message", old, data.receiver);
           chatFactory.setCurrentUserName(data.receiver)
@@ -203,7 +205,9 @@ class CtrlServer {
           console.error(ex.stack)
         } finally {
           this.wechatircd_LocalID = null
-          chatFactory.setCurrentUserName(old)
+          if (old) {
+            chatFactory.setCurrentUserName(old)
+          }
         }
         break
       case 'add_member':
