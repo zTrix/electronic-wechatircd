@@ -32,8 +32,8 @@
   },
   "homepage": "https://github.com/zTrix/electronic-wechatircd",
   "dependencies": {
-    "electron-packager": "^7.0.0",
-    "electron": "^1.4.1",
+    "electron-packager": "^8.7.0",
+    "electron": "^1.6.7",
     "pinyin": "^2.7.1"
   },
   "devDependencies": {
