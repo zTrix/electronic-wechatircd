@@ -5,6 +5,16 @@ electronic-wechatircd 将微信网页版转换成 IRC Server，可以使用 IRC 
 
 这个项目是 https://github.com/geeeeeeeeek/electronic-wechat 与 https://github.com/MaskRay/wechatircd 的合体项目。
 
+## 合体之后修改的部分
+
+Server 部分：
+
+页面注入的部分：
+
+`CtrlServer->constructor` 里面，同步联系人时间改为 10s 一次。
+
+`chatFactory.setCurrentUserName(old)` 之前，检查 old 是否为空。
+
 ## 安装
 
 TODO

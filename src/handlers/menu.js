@@ -9,7 +9,6 @@ class MenuHandler {
   create() {
     const template = this.getTemplate(remote.process.platform);
     if (template) {
-      console.log('Menu.create()')
       const menuFromTemplate = Menu.buildFromTemplate(template);
       Menu.setApplicationMenu(menuFromTemplate);
     }

@@ -51,5 +51,7 @@ Common.MENTION_MENU_HINT_TEXT_CN = '选择回复的人:';
 Common.MESSAGE_PREVENT_RECALL = 'Blocked a message recall.';
 Common.MESSAGE_PREVENT_RECALL_CN = '阻止了一次撤回';
 Common.EMOJI_MAXIUM_SIZE = 120;
+Common.SEND_TEXT_MESSAGE_TIMEOUT = 5;
+Common.WEBSOCKET_URL = 'ws://127.0.0.1:9876/ws';
 
 module.exports = Common;

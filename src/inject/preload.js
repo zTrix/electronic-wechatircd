@@ -58,24 +58,40 @@ class Injector {
         let utilFactory = window.utilFactory = injector.get('utilFactory')
         let editArea = window.editArea = angular.element('#editArea').scope()
 
-        let chatFactoryMessageProcessReal = chatFactory.messageProcess;
-        Object.defineProperty(chatFactory, "messageProcess", {
+        // chatFactory#createMessage
+        const chatFactoryCreateMessageReal = chatFactory.createMessage
+        Object.defineProperty(chatFactory, 'createMessage', {
+          set: () => {},
           get: () => function (e) {
-            console.log("hook chatFactory.messageProcess", e);
-            // return chatFactoryMessageProcess.apply(chatFactory, arguments)
-            return CtrlServer.chatFactoryMessageProcess(chatFactoryMessageProcessReal, chatFactory).apply(chatFactory, arguments)
-          },
-          set: (d) => {}
-        });
+            return CtrlServer.chatFactoryCreateMessage.call(chatFactory, chatFactoryCreateMessageReal).apply(null, arguments)
+          }
+        })
 
-        let chatFactoryCreateMessageReal = chatFactory.createMessage;
-        Object.defineProperty(chatFactory, "createMessage", {
-          get: () => function (e) {
-            console.log("hook chatFactory.createMessage", e);
-            // return chatFactoryMessageProcess.apply(chatFactory, arguments)
-            return CtrlServer.chatFactoryCreateMessage(chatFactoryCreateMessageReal, chatFactory).apply(chatFactory, arguments)
-          },
-          set: (d) => {}
+        // chatFactory#messageProcess
+        const chatFactoryMessageProcessReal = chatFactory.messageProcess
+        Object.defineProperty(chatFactory, 'messageProcess', {
+          set: () => {},
+          get: () => function(e) {
+            return CtrlServer.chatFactoryMessageProcess.call(chatFactory, chatFactoryMessageProcessReal).apply(null, arguments)
+          }
+        })
+
+        // contactFactory#addContact
+        const contactFactoryAddContactReal = contactFactory.addContact
+        Object.defineProperty(contactFactory, 'addContact', {
+          set: () => {},
+          get: () => function(e) {
+            return CtrlServer.contactFactoryAddContact.call(contactFactory, contactFactoryAddContactReal).apply(null, arguments)
+          }
+        })
+
+        // contactFactory#deleteContact
+        const contactFactoryDeleteContactReal = contactFactory.deleteContact
+        Object.defineProperty(contactFactory, 'deleteContact', {
+          set: () => {},
+          get: () => function(e) {
+            return CtrlServer.contactFactoryDeleteContact.call(contactFactory, contactFactoryDeleteContactReal).apply(null, arguments)
+          }
         })
 
         return ret;
@@ -91,7 +107,7 @@ class Injector {
       }
 
       BadgeCount.init();
-      this.ctrlServer.init();
+      // this.ctrlServer.init();
     };
 
     window.onload = () => {
@@ -128,6 +144,15 @@ class Injector {
     if (!(value.AddMsgList instanceof Array)) return value;
     value.AddMsgList.forEach((msg) => {
       switch (msg.MsgType) {
+        case constants.MSGTYPE_EMOTICON:
+          Injector.lock(msg, 'MMDigest', '[Emoticon]');
+          Injector.lock(msg, 'MsgType', constants.MSGTYPE_EMOTICON);
+          if (msg.ImgHeight >= Common.EMOJI_MAXIUM_SIZE) {
+            Injector.lock(msg, 'MMImgStyle', { height: `${Common.EMOJI_MAXIUM_SIZE}px`, width: 'initial' });
+          } else if (msg.ImgWidth >= Common.EMOJI_MAXIUM_SIZE) {
+            Injector.lock(msg, 'MMImgStyle', { width: `${Common.EMOJI_MAXIUM_SIZE}px`, height: 'initial' });
+          }
+          break;
         case constants.MSGTYPE_RECALLED:
           Injector.lock(msg, 'MsgType', constants.MSGTYPE_SYS);
           Injector.lock(msg, 'MMActualContent', Common.MESSAGE_PREVENT_RECALL);
