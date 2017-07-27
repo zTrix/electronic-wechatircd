@@ -9,6 +9,7 @@ class MenuHandler {
   create() {
     const template = this.getTemplate(remote.process.platform);
     if (template) {
+      console.log('Menu.create()')
       const menuFromTemplate = Menu.buildFromTemplate(template);
       Menu.setApplicationMenu(menuFromTemplate);
     }
@@ -157,12 +158,12 @@ class MenuHandler {
           {
             label: 'Reload This Window',
             accelerator: 'Ctrl+R',
-            click: () => MenuHandler._reload,
+            click: MenuHandler._reload,
           },
           {
             label: 'Toggle DevTools',
             accelerator: 'Ctrl+Shift+I',
-            click: () => MenuHandler._devTools,
+            click: MenuHandler._devTools,
           },
           {
             type: 'separator',
@@ -170,7 +171,7 @@ class MenuHandler {
           {
             label: 'Quit The App',
             accelerator: 'Ctrl+Q',
-            click: () => MenuHandler._quitApp,
+            click: MenuHandler._quitApp,
           },
         ],
       },
